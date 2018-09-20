@@ -4,6 +4,8 @@ var parts = [];
 
 var pos;
 
+var rangeStroke = parseInt(document.getElementById("start").value);
+
 var min_nb_queue = 20;
 var max_nb_queue = 150;
 
@@ -30,6 +32,11 @@ document.getElementById("audiofile").onchange = function(event) {
     }
 };
 
+var range = document.getElementById("start");
+range.onchange = function(event) {
+    rangeStroke = parseInt(event.target.value);
+};
+
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -52,7 +59,6 @@ function setup() {
 
 function draw() {
     background(0);
-
 
     if(typeof song != "undefined" && song.isLoaded() && !song.isPlaying()) {
         loader.classList.remove("loading");
@@ -160,8 +166,10 @@ class Particule{
 	        if (i%3 == 0){
                 this.xAmp += 0.01;
                 push();
-                    fill(100);
-                    //noStroke();
+                    // console.log(rangeStroke)
+                    fill(100-rangeStroke);
+                    // noStroke();
+                    stroke(rangeStroke+100);
                     translate(this.old_pos[i].vec);
                     rotate(this.vit.heading());
                     ellipse(0, sin(this.xAmp + 0.1*i)*(0.7*i)/(0.5*this.vit.mag()) , (this.rayon*2)-i/(this.n_pos/(this.rayon*2)));
@@ -170,6 +178,9 @@ class Particule{
         }
 
 		push();
+            fill(100-rangeStroke);
+            // noStroke();
+            stroke(rangeStroke);
 		  	ellipse(this.pos.x, this.pos.y, this.rayon*2);
 	  	pop();
 	}

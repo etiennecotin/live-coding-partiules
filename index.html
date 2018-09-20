@@ -7,8 +7,13 @@
 	<script src="./addons/p5.collide2D.js"></script>
 </head>
 <body style="margin:0">
-	<input id="audiofile" type="file"/>
-	<h3 class="loader">Loading...</h3>
+	<div style="display: flex; flex-direction: column">
+		<input id="audiofile" type="file"/>
+		<h3 class="loader">Loading...</h3>
+		<input type="range" id="start" name="volume"
+			   min="0" max="100" style="width: 150px"/>
+	</div>
+
 
 <script src="./sketch.js"></script>
 </body>
