@@ -14,7 +14,7 @@ var song, analyzer;
 var fft, // Allow us to analyze the song
     numBars = 1024, // The number of bars to use; power of 2 from 16 to 1024
     song,
-    rms; // The p5 sound object
+    rms = 0; // The p5 sound object
 
 // Load our song
 var loader = document.querySelector(".loader");
@@ -106,7 +106,7 @@ class Particule{
 	  this.rayon = 50;
 	  this.acc = createVector(random()*0.1, random()*0.1)
 
-      this.mplitude = 25.0;
+    //   this.mplitude = 25.0;
 	  this.xAmp = 0;
 
 	  this.old_pos = [];
@@ -116,12 +116,12 @@ class Particule{
 	      this.old_pos.push({ 'vec' :createVector(0,0), 'taille' :random(10, 30)})
       }
 	}
-	update() {        
+	update() {     
 	    this.vit.add(this.acc);
 	    this.pos.add(this.vit);
 
         for (let i = this.n_pos-2; i > -1; i--){
-            this.old_pos[i+1].vec = this.old_pos[i].vec.copy();
+            this.old_pos[i+1].vec = this.old_pos[i].vec.copy();            
         }
 
         this.old_pos[0].vec = this.pos.copy();
@@ -146,12 +146,13 @@ class Particule{
             }
 	  	}
 
-	  	if ((frameCount%100) == 0) {
+	  	if ((frameCount%50) == 0) {
             this.acc = createVector(random()*0.5-0.25, random()*0.5-0.25);
         }
 
-        this.vit.x = min(max(this.vit.x, -5), 5);
-        this.vit.y = min(max(this.vit.y, -5), 5);
+        this.vit.x = min(max(this.vit.x, -5), 5) * (rms*1);
+        this.vit.y = min(max(this.vit.y, -5), 5) * (rms*1);
+        
 
 
 	  	if(mouseIsPressed) {
