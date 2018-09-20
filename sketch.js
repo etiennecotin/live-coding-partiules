@@ -4,16 +4,70 @@ var parts = [];
 
 var pos;
 
+//declaration musique
+var song, analyzer;
+var fft, // Allow us to analyze the song
+    numBars = 1024, // The number of bars to use; power of 2 from 16 to 1024
+    song,
+    rms; // The p5 sound object
+
+// Load our song
+var loader = document.querySelector(".loader");
+document.getElementById("audiofile").onchange = function(event) {
+    if(event.target.files[0]) {
+        if(typeof song != "undefined") { // Catch already playing songs
+            song.disconnect();
+            song.stop();
+        }
+
+        console.log("ok");
+        // Load our new song
+        song = loadSound(URL.createObjectURL(event.target.files[0]));
+        loader.classList.add("loading");
+    }
+};
+
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+    createCanvas(windowWidth, windowHeight);
 
-  colorMode(HSB, 100);
+    colorMode(HSB, 100);
 
-  parts.push(new Particule());
+    parts.push(new Particule());
+
+
 }
+
+// function preload() {
+//     file = document.getElementById("thefile");
+//     audio = document.getElementById("audio");
+//     song = audio;
+//     // song = loadSound('rone-bye-bye_macadam.mp3');
+//
+//     fft = new p5.FFT();
+//     peakDetect = new p5.PeakDetect();
+// }
 
 function draw() {
     background(0);
+
+
+    if(typeof song != "undefined" && song.isLoaded() && !song.isPlaying()) {
+        loader.classList.remove("loading");
+        song.play();
+        song.setVolume(0.5);
+
+        fft = new p5.FFT();
+        fft.waveform(numBars);
+        fft.smooth(0.85);
+    }
+
+    if(typeof fft != "undefined") {
+        var spectrum = fft.analyze();
+        peakDetect = new p5.PeakDetect();
+        peakDetect.update(fft);
+        rms = peakDetect.penergy*10;
+    }
+
 
     for (let i = 0; i < parts.length; i++) {
         parts[i].update();
