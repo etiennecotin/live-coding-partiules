@@ -38,9 +38,6 @@ function setup() {
 
     parts.push(new Particule(random(min_nb_queue, max_nb_queue)));
 
-
-  parts.push(new Particule(random(min_nb_queue, max_nb_queue)));
-
 }
 
 // function preload() {
