@@ -4,6 +4,9 @@ var parts = [];
 
 var pos;
 
+var min_nb_queue = 20;
+var max_nb_queue = 150;
+
 //declaration musique
 var song, analyzer;
 var fft, // Allow us to analyze the song
@@ -27,13 +30,13 @@ document.getElementById("audiofile").onchange = function(event) {
     }
 };
 
+
 function setup() {
     createCanvas(windowWidth, windowHeight);
 
     colorMode(HSB, 100);
 
-    parts.push(new Particule());
-
+    parts.push(new Particule(random(min_nb_queue, max_nb_queue)));
 
 }
 
@@ -79,11 +82,18 @@ function draw() {
   	}
 
     detectCollision();
+    if(frameCount > 100 && frameCount < 130) {
+        for (let i = 0; i < 1; i++) {
+            //parts.push(new Particule(random(min_nb_queue, max_nb_queue)));
+        }
+        
+    }
 
 }
 
 class Particule{
-	constructor() {
+	constructor(nb_queue) {
+        
 	  this.pos = createVector(width/2, height/2);
 	  this.vit = createVector(random(-10, 10),random(-10, 10));
 	  // this.teinte = random(255);
@@ -94,14 +104,13 @@ class Particule{
 	  this.xAmp = 0;
 
 	  this.old_pos = [];
-	  this.n_pos = 50;
-
+      this.n_pos = round(nb_queue);
+      
 	  for (let i = 0; i < this.n_pos; i++){
 	      this.old_pos.push({ 'vec' :createVector(0,0), 'taille' :random(10, 30)})
       }
 	}
-	update() {
-
+	update() {        
 	    this.vit.add(this.acc);
 	    this.pos.add(this.vit);
 
@@ -151,8 +160,8 @@ class Particule{
 	        if (i%3 == 0){
                 this.xAmp += 0.01;
                 push();
-                    // fill(this.teinte, 255, 255);
-                    noStroke();
+                    fill(100);
+                    //noStroke();
                     translate(this.old_pos[i].vec);
                     rotate(this.vit.heading());
                     ellipse(0, sin(this.xAmp + 0.1*i)*(0.7*i)/(0.5*this.vit.mag()) , (this.rayon*2)-i/(this.n_pos/(this.rayon*2)));
@@ -167,7 +176,7 @@ class Particule{
 
 }
 function doubleClicked() {
-	parts.push(new Particule);
+	parts.push(new Particule(random(min_nb_queue, max_nb_queue)));
 }
 function mouseReleased() {
 	for (var i = 0; i < parts.length; i++) {
